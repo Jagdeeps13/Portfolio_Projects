@@ -8,29 +8,29 @@
   order by 3,4
 
   select [location] ,[date],[total_cases],[new_cases],[total_deaths],[population]
-    FROM [Portfolio_project].[dbo].[Covid_Deaths$]
-	order by 1,2
+  FROM [Portfolio_project].[dbo].[Covid_Deaths$]
+  order by 1,2
 
 
 
 
 	--Looking at Total cases vs Total Deaths
 
-	  select [location] ,[date],[total_cases],[total_deaths],
-	 ((cast(total_deaths as float))/ cast(total_cases as float))*100 as Death_Percentage
+      select [location] ,[date],[total_cases],[total_deaths],
+     ((cast(total_deaths as float))/ cast(total_cases as float))*100 as Death_Percentage
       FROM [Portfolio_project].[dbo].[Covid_Deaths$]
-	  where location like '%states%'
-	  order by 1,2
+      where location like '%states%'
+      order by 1,2
 
 
 
 
 	  --Total Cases vs Population
 
-	  select [location] ,[date],[total_cases],[new_cases],[population],
-	  (total_deaths/population) *100 as Death_percentage
-    FROM [Portfolio_project].[dbo].[Covid_Deaths$]
-	order by 1,2
+     select [location] ,[date],[total_cases],[new_cases],[population],
+     (total_deaths/population) *100 as Death_percentage
+     FROM [Portfolio_project].[dbo].[Covid_Deaths$]
+     order by 1,2
 
 
 
@@ -38,15 +38,15 @@
 	--Count of active cases by Date
 	--shows increased covid cases per day
 
-select [location] ,[date], sum([new_cases]) 
-over(Partition by Location order by date rows between unbounded preceding and current row ) as Running_activecases
- FROM [Portfolio_project].[dbo].[Covid_Deaths$]
+  select [location] ,[date], sum([new_cases]) 
+  over(Partition by Location order by date rows between unbounded preceding and current row ) as Running_activecases
+  FROM [Portfolio_project].[dbo].[Covid_Deaths$]
 
 
  
  --countries with highest cases
 
- select [location],[population],max(total_cases) as max_cases
+  select [location],[population],max(total_cases) as max_cases
   FROM [Portfolio_project].[dbo].[Covid_Deaths$]
   group by [location],[population]
   order by 1,2
@@ -57,10 +57,10 @@ over(Partition by Location order by date rows between unbounded preceding and cu
 
    select [location],[population], MAX(cast(total_cases as int)) as highesinfectioncount ,
    MAX((cast(total_cases as int)/population))*100 as affected_population
-  FROM [Portfolio_project].[dbo].[Covid_Deaths$]
+   FROM [Portfolio_project].[dbo].[Covid_Deaths$]
   --where location like 'I%A'
- group by [location],[population]
- order by affected_population desc
+   group by [location],[population]
+   order by affected_population desc
 
 
 
@@ -72,8 +72,8 @@ over(Partition by Location order by date rows between unbounded preceding and cu
   FROM [Portfolio_project].[dbo].[Covid_Deaths$]
   --where location like 'I%A'
   where continent is not null
- group by [location],[population]
- order by HighesDeathCount desc
+  group by [location],[population]
+  order by HighesDeathCount desc
 
 
 
@@ -91,20 +91,20 @@ over(Partition by Location order by date rows between unbounded preceding and cu
 
  --continent with Highest Death Count Per Population
 
- select continent, MAX(cast(total_deaths as int)) as HighesDeathCount 
- FROM [Portfolio_project].[dbo].[Covid_Deaths$]
- where continent is not null
- group by continent
- order by HighesDeathCount desc
+      select continent, MAX(cast(total_deaths as int)) as HighesDeathCount 
+      FROM [Portfolio_project].[dbo].[Covid_Deaths$]
+      where continent is not null
+      group by continent
+      order by HighesDeathCount desc
 
 
 
 
  --Global Numbers
 
-    select sum(new_cases)as total_cases,sum(cast(new_deaths as int)) as total_deaths,
+        select sum(new_cases)as total_cases,sum(cast(new_deaths as int)) as total_deaths,
 	sum(new_deaths)/sum(new_cases) *100 as Death_percentage
-    FROM [Portfolio_project].[dbo].[Covid_Deaths$]
+        FROM [Portfolio_project].[dbo].[Covid_Deaths$]
 	where continent is not null
 	order by 1,2
 
@@ -203,7 +203,7 @@ over(Partition by Location order by date rows between unbounded preceding and cu
 	create view GlobalNumbers as
 	select sum(new_cases)as total_cases,sum(cast(new_deaths as int)) as total_deaths,
 	sum(new_deaths)/sum(new_cases) *100 as Death_percentage
-    FROM [Portfolio_project].[dbo].[Covid_Deaths$]
+        FROM [Portfolio_project].[dbo].[Covid_Deaths$]
 	where continent is not null
 	--order by 1,2
 
@@ -211,7 +211,7 @@ over(Partition by Location order by date rows between unbounded preceding and cu
 
 
 	create view PercentPopulationVaccinated as 
-    select d.continent,d.location,d.date,d.population,v.new_vaccinations,
+        select d.continent,d.location,d.date,d.population,v.new_vaccinations,
 	sum(convert(bigint,v.new_vaccinations )) over(partition by d.location 
 	order by d.date , d.location)  as Rolling_PeopleVaccinated
 	--(population/Rolling_PeopleVaccinated)*100 
